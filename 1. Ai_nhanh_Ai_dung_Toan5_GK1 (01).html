@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1768c5">
+<title>AI NHANH - AI ĐÚNG | Toán 5 – Giữa học kì I</title>
+<style>
+  :root {
+    --blue: #1768c5;
+    --blue-dark: #104b96;
+    --blue-soft: #eaf4ff;
+    --yellow: #ffcf38;
+    --yellow-soft: #fff7d8;
+    --orange: #ff8a36;
+    --green: #149b69;
+    --green-soft: #e5f8ef;
+    --red: #dc4b4b;
+    --red-soft: #fff0ef;
+    --ink: #18324d;
+    --muted: #61758a;
+    --line: #dce8f4;
+    --white: #fff;
+    --shadow: 0 18px 48px rgba(26, 78, 128, .12);
+    --radius: 24px;
+  }
+  * { box-sizing: border-box; }
+  html { min-height: 100%; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    color: var(--ink);
+    font-family: Arial, "Segoe UI", sans-serif;
+    background:
+      radial-gradient(circle at 8% 8%, rgba(255,207,56,.25) 0 7px, transparent 8px),
+      radial-gradient(circle at 93% 20%, rgba(255,138,54,.18) 0 6px, transparent 7px),
+      radial-gradient(circle at 14% 87%, rgba(23,104,197,.12) 0 8px, transparent 9px),
+      linear-gradient(145deg, #edf7ff 0%, #f9fcff 46%, #fff8e5 100%);
+    background-attachment: fixed;
+  }
+  button, input { font: inherit; }
+  button { cursor: pointer; }
+  button:focus-visible, input:focus-visible, summary:focus-visible {
+    outline: 3px solid rgba(255,138,54,.65); outline-offset: 3px;
+  }
+  .app-shell { width: min(1120px, calc(100% - 30px)); margin: 0 auto; padding: 24px 0 36px; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:18px; }
+  .school-mark { display:flex; align-items:center; gap:11px; color:var(--blue-dark); font-weight:800; letter-spacing:.02em; }
+  .mark-icon { display:grid; place-items:center; width:44px; height:44px; border-radius:15px; background:var(--yellow); box-shadow:0 5px 0 #eab52b; font-size:23px; }
+  .offline-pill { display:flex; align-items:center; gap:7px; padding:8px 13px; color:#24724e; background:#e6f8ef; border:1px solid #bfe9d2; border-radius:999px; font-size:12px; font-weight:700; }
+  .offline-dot { width:8px; height:8px; border-radius:50%; background:#20ad70; }
+  .screen { display:none; animation:screenIn .32s ease both; }
+  .screen.active { display:block; }
+  @keyframes screenIn { from {opacity:0; transform:translateY(8px)} to {opacity:1; transform:translateY(0)} }
+  .panel { background:rgba(255,255,255,.96); border:1px solid rgba(214,230,244,.95); border-radius:var(--radius); box-shadow:var(--shadow); }
+  .hero { position:relative; overflow:hidden; padding:clamp(24px,5vw,52px); text-align:center; }
+  .hero:before, .hero:after { content:""; position:absolute; border-radius:50%; pointer-events:none; }
+  .hero:before { width:190px; height:190px; left:-72px; top:-82px; background:rgba(255,207,56,.22); }
+  .hero:after { width:230px; height:230px; right:-105px; bottom:-120px; background:rgba(23,104,197,.10); }
+  .hero-content { position:relative; z-index:1; }
+  .hero-kicker { display:inline-flex; align-items:center; gap:8px; padding:8px 15px; border-radius:999px; color:var(--blue-dark); background:var(--blue-soft); font-size:13px; font-weight:800; }
+  .hero h1 { margin:18px 0 8px; color:var(--blue-dark); font-size:clamp(34px,7vw,64px); line-height:1.02; letter-spacing:-.045em; font-weight:900; text-shadow:0 3px 0 #d5e8fc; }
+  .hero-subtitle { margin:0; color:#4f6b86; font-size:clamp(16px,2.5vw,22px); font-weight:700; }
+  .hero-icons { display:flex; justify-content:center; align-items:center; gap:22px; margin:22px 0 12px; font-size:clamp(27px,5vw,42px); }
+  .hero-icons span { display:inline-block; animation:bob 2.6s ease-in-out infinite; }
+  .hero-icons span:nth-child(2) { animation-delay:.25s; }
+  .hero-icons span:nth-child(3) { animation-delay:.5s; }
+  @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+  .instructions { max-width:650px; margin:0 auto 24px; padding:15px 18px; border-radius:17px; background:#f4f9ff; color:#49637c; text-align:left; line-height:1.7; }
+  .instructions strong { color:var(--blue-dark); }
+  .instructions ul { margin:5px 0 0; padding-left:22px; }
+  .start-controls { max-width:680px; margin:0 auto; text-align:left; }
+  .name-label { display:block; margin-bottom:8px; color:var(--ink); font-size:14px; font-weight:800; }
+  .name-input { width:100%; height:52px; padding:0 16px; border:2px solid var(--line); border-radius:14px; background:white; color:var(--ink); transition:border .2s, box-shadow .2s; }
+  .name-input:focus { border-color:var(--blue); box-shadow:0 0 0 4px rgba(23,104,197,.10); outline:none; }
+  .settings { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin:15px 0 18px; }
+  .setting { display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:58px; padding:10px 12px; border:1px solid var(--line); border-radius:14px; background:#fbfdff; font-size:13px; font-weight:700; color:#456078; }
+  .switch { position:relative; flex:none; width:42px; height:24px; }
+  .switch input { position:absolute; opacity:0; width:1px; height:1px; }
+  .switch-track { position:absolute; inset:0; border-radius:99px; background:#bdcbd8; transition:.2s; cursor:pointer; }
+  .switch-track:before { content:""; position:absolute; width:18px; height:18px; top:3px; left:3px; border-radius:50%; background:white; box-shadow:0 1px 3px #0002; transition:.2s; }
+  .switch input:checked + .switch-track { background:var(--blue); }
+  .switch input:checked + .switch-track:before { transform:translateX(18px); }
+  .switch input:focus-visible + .switch-track { outline:3px solid rgba(255,138,54,.65); outline-offset:3px; }
+  .button-row { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; }
+  .btn { border:0; border-radius:15px; min-height:51px; padding:13px 22px; font-weight:900; letter-spacing:.015em; transition:transform .16s, box-shadow .16s, background .16s; }
+  .btn:hover { transform:translateY(-2px); }
+  .btn:active { transform:translateY(0); }
+  .btn-primary { color:#17334f; background:var(--yellow); box-shadow:0 5px 0 #e7b52d; }
+  .btn-primary:hover { background:#ffda5d; box-shadow:0 7px 0 #e7b52d; }
+  .btn-secondary { color:white; background:var(--blue); box-shadow:0 5px 0 var(--blue-dark); }
+  .btn-secondary:hover { background:#2679d6; box-shadow:0 7px 0 var(--blue-dark); }
+  .btn-light { color:var(--blue-dark); background:#edf5ff; border:1px solid #d3e5f9; }
+  .btn-light:hover { background:#e0efff; }
+  .btn:disabled { opacity:.55; cursor:not-allowed; transform:none; box-shadow:none; }
+  .teacher-note { max-width:680px; margin:18px auto 0; padding:12px 16px; border:1px dashed #c5d9ed; border-radius:14px; background:#fbfdff; color:#536c83; text-align:left; font-size:13px; line-height:1.6; }
+  .teacher-note summary { color:var(--blue-dark); font-weight:800; cursor:pointer; }
+  .teacher-note ul { margin:8px 0 0; padding-left:20px; }
+  .game-head { display:flex; justify-content:space-between; align-items:center; gap:14px; margin:0 0 14px; }
+  .game-title { color:var(--blue-dark); font-size:17px; font-weight:900; }
+  .game-student { color:var(--muted); font-size:13px; font-weight:700; text-align:right; }
+  .stats-panel { padding:15px 18px 17px; margin-bottom:16px; }
+  .stats-top { display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:12px; }
+  .progress-label { font-size:13px; color:var(--muted); font-weight:800; }
+  .progress-label strong { color:var(--blue-dark); font-size:15px; }
+  .progress-track { height:10px; background:#e9f1f8; border-radius:99px; overflow:hidden; }
+  .progress-fill { width:0; height:100%; border-radius:99px; background:linear-gradient(90deg,#1d83dc,#ffbd2e); transition:width .35s ease; }
+  .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:9px; margin-top:14px; }
+  .stat { display:flex; align-items:center; gap:9px; min-height:54px; padding:8px 11px; border-radius:13px; background:#f6faff; }
+  .stat-icon { display:grid; place-items:center; width:31px; height:31px; border-radius:10px; background:white; font-size:17px; }
+  .stat-label { display:block; color:var(--muted); font-size:11px; font-weight:700; }
+  .stat-value { display:block; margin-top:2px; color:var(--ink); font-size:16px; font-weight:900; font-variant-numeric:tabular-nums; }
+  .question-panel { padding:clamp(19px,4vw,34px); }
+  .question-meta { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:20px; }
+  .question-tags { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  .tag { padding:7px 11px; color:var(--blue-dark); border-radius:999px; background:var(--blue-soft); font-size:12px; font-weight:900; }
+  .tag.source { color:#98620b; background:var(--yellow-soft); }
+  .timer { display:flex; align-items:center; gap:8px; padding:8px 13px; border-radius:13px; background:#fff5e9; color:#a75a12; font-weight:900; font-variant-numeric:tabular-nums; }
+  .timer.urgent { color:white; background:var(--red); animation:pulse .8s ease-in-out infinite alternate; }
+  @keyframes pulse { to { transform:scale(1.04); } }
+  .timer-icon { font-size:19px; }
+  .question-title { margin:0 0 11px; color:#54718c; font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:.065em; }
+  .question-prompt { margin:0 0 27px; color:#18324d; font-size:clamp(19px,3vw,25px); line-height:1.55; font-weight:800; }
+  .answer-shuffle-hint { margin:-15px 0 14px; color:#54718c; font-size:12px; font-weight:700; }
+  .answer-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px; }
+  .answer-btn { display:flex; align-items:center; gap:13px; width:100%; min-height:74px; padding:14px 17px; text-align:left; color:var(--ink); background:#fff; border:2px solid #dce8f4; border-radius:17px; font-size:clamp(16px,2.3vw,19px); font-weight:800; box-shadow:0 3px 0 #edf3f9; transition:border .16s, background .16s, transform .16s, box-shadow .16s; }
+  .answer-btn:hover:not(:disabled) { border-color:#8dbce9; background:#f5faff; transform:translateY(-2px); box-shadow:0 6px 0 #e3eef8; }
+  .answer-letter { display:grid; place-items:center; flex:none; width:36px; height:36px; border-radius:11px; color:var(--blue-dark); background:#eaf4ff; font-size:16px; font-weight:900; }
+  .answer-btn.correct { color:#116947; border-color:#43bd87; background:var(--green-soft); box-shadow:0 3px 0 #c6ead8; }
+  .answer-btn.correct .answer-letter { color:white; background:var(--green); }
+  .answer-btn.wrong { color:#a83232; border-color:#e88983; background:var(--red-soft); box-shadow:0 3px 0 #f5d3d0; }
+  .answer-btn.wrong .answer-letter { color:white; background:var(--red); }
+  .answer-btn:disabled { cursor:default; }
+  .feedback { display:none; margin-top:22px; padding:18px 20px; border-radius:17px; animation:screenIn .25s ease both; }
+  .feedback.show { display:block; }
+  .feedback.success { border:1px solid #b9e8cf; background:var(--green-soft); }
+  .feedback.error { border:1px solid #f0c4c0; background:var(--red-soft); }
+  .feedback-heading { display:flex; align-items:center; gap:9px; margin:0 0 7px; font-size:18px; font-weight:900; }
+  .feedback.success .feedback-heading { color:#087548; }
+  .feedback.error .feedback-heading { color:#b43c35; }
+  .feedback-answer { margin:0 0 8px; color:#405b72; font-weight:800; line-height:1.5; }
+  .explanation { margin:0; color:#405b72; font-size:15px; line-height:1.7; }
+  .next-row { display:flex; justify-content:flex-end; margin-top:18px; }
+  .fraction { display:inline-flex; vertical-align:middle; flex-direction:column; align-items:center; justify-content:center; min-width:1.25em; margin:0 .12em; line-height:1.05; font-size:.9em; font-weight:800; }
+  .fraction .num { padding:0 .18em .12em; border-bottom:1.5px solid currentColor; }
+  .fraction .den { padding:.12em .18em 0; }
+  .math-line { white-space:normal; }
+  .result-hero { padding:clamp(22px,4vw,38px); text-align:center; overflow:hidden; }
+  .trophy { font-size:58px; line-height:1; margin:2px 0 12px; }
+  .result-hero h2 { margin:0 0 7px; color:var(--blue-dark); font-size:clamp(27px,5vw,40px); font-weight:900; }
+  .result-hero p { margin:0; color:var(--muted); line-height:1.5; }
+  .result-name { margin-top:10px !important; color:var(--ink) !important; font-weight:800; }
+  .result-score { margin:22px auto 18px; color:var(--blue-dark); font-size:clamp(42px,8vw,66px); line-height:1; font-weight:900; font-variant-numeric:tabular-nums; }
+  .result-score small { font-size:.34em; color:var(--muted); }
+  .result-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; max-width:780px; margin:0 auto; }
+  .result-tile { padding:14px 9px; background:#f6faff; border:1px solid #e3eef8; border-radius:15px; }
+  .result-tile strong { display:block; color:var(--blue-dark); font-size:23px; font-weight:900; }
+  .result-tile span { display:block; margin-top:5px; color:var(--muted); font-size:12px; font-weight:700; }
+  .comment-box { max-width:760px; margin:18px auto 0; padding:15px 18px; border-radius:15px; background:var(--yellow-soft); color:#805611; font-weight:900; line-height:1.5; }
+  .result-actions { margin:20px 0 0; }
+  .review-panel { margin-top:18px; padding:22px; }
+  .review-panel h3 { margin:0 0 14px; color:var(--blue-dark); font-size:21px; }
+  .review-item { padding:16px 0; border-top:1px solid var(--line); }
+  .review-item:first-of-type { border-top:0; }
+  .review-top { display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:8px; }
+  .review-id { color:var(--blue-dark); font-size:13px; font-weight:900; }
+  .review-status { font-size:12px; font-weight:900; }
+  .review-status.good { color:#087548; }
+  .review-status.bad { color:#b43c35; }
+  .review-prompt { margin:0 0 7px; font-weight:800; line-height:1.55; }
+  .review-details { margin:0; color:#536c83; font-size:14px; line-height:1.6; }
+  .review-explain { margin:7px 0 0; color:#536c83; font-size:14px; line-height:1.6; }
+  .footer-note { margin:19px 0 0; color:#70859a; text-align:center; font-size:12px; line-height:1.6; }
+  .confetti-layer { position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:50; }
+  .confetti-piece { position:absolute; top:-18px; width:9px; height:13px; border-radius:2px; opacity:.95; animation:fall 1.8s ease-in forwards; }
+  @keyframes fall { to { transform:translate3d(var(--drift),105vh,0) rotate(680deg); opacity:.15; } }
+  .hidden { display:none !important; }
+  @media (max-width:760px) {
+    .settings { grid-template-columns:1fr; }
+    .setting { min-height:51px; }
+    .stats-grid { grid-template-columns:repeat(2,1fr); }
+    .result-grid { grid-template-columns:repeat(2,1fr); }
+    .hero { padding:27px 18px; }
+    .topbar { align-items:flex-start; }
+  }
+  @media (max-width:540px) {
+    .app-shell { width:min(100% - 18px, 1120px); padding-top:12px; }
+    .school-mark { font-size:13px; }
+    .mark-icon { width:38px; height:38px; }
+    .offline-pill { font-size:10px; padding:7px 9px; }
+    .answer-grid { grid-template-columns:1fr; gap:10px; }
+    .answer-btn { min-height:64px; }
+    .question-meta { align-items:flex-start; }
+    .timer { padding:7px 10px; }
+    .stats-panel { padding:13px; }
+    .stat { padding:7px; }
+    .stat-icon { width:27px; height:27px; }
+    .stat-value { font-size:15px; }
+    .button-row .btn { width:100%; }
+  }
+  @media (prefers-reduced-motion:reduce) {
+    *, *:before, *:after { scroll-behavior:auto !important; animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+  }
+  @media print {
+    body { background:white !important; color:#111; }
+    .app-shell { width:100%; padding:0; }
+    .topbar, #startScreen, #gameScreen, .result-actions, .footer-note, .confetti-layer { display:none !important; }
+    #resultScreen { display:block !important; }
+    .panel { box-shadow:none; border:1px solid #bbb; }
+    .result-hero { padding:12px; }
+    .trophy { font-size:32px; }
+    .result-score { margin:10px auto; font-size:42px; }
+    .result-tile { padding:7px; }
+    .review-panel { display:block !important; page-break-before:always; }
+    .review-item { break-inside:avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <div class="topbar">
+    <div class="school-mark"><span class="mark-icon" aria-hidden="true">🏆</span><span>GÓC HỌC TẬP TOÁN 5</span></div>
+    <div class="offline-pill"><span class="offline-dot"></span> CHƠI NGOẠI TUYẾN</div>
+  </div>
+
+  <main>
+    <section id="startScreen" class="screen active" aria-labelledby="mainTitle">
+      <div class="panel hero">
+        <div class="hero-content">
+          <h1 id="mainTitle">AI NHANH - AI ĐÚNG</h1>
+          <p class="hero-subtitle">Chinh phục kiến thức Toán 5 – Giữa học kì I</p>
+          <div class="hero-icons" aria-hidden="true"><span>📚</span><span>🌟</span><span>🏅</span></div>
+          <div class="instructions">
+            <strong>🎯 Cách chơi thật đơn giản:</strong>
+            <ul>
+              <li>Chọn đáp án nhanh chóng, chính xác để đạt điểm cao nhất.</li>
+              <li>Sau khi trả lời, em sẽ được xem đáp án đúng và lời giải ngắn gọn.</li>
+              <li>Mỗi câu trả lời đúng được 1 điểm. Hãy cố gắng hoàn thành cả 16 lượt nhé!</li>
+            </ul>
+          </div>
+          <div class="start-controls">
+            <label class="name-label" for="studentName">👩‍🎓 Tên học sinh (không bắt buộc)</label>
+            <input id="studentName" class="name-input" type="text" maxlength="60" placeholder="Nhập tên của em..." autocomplete="off">
+            <div class="settings" aria-label="Cài đặt trò chơi">
+              <div class="setting"><span>⏱️ Giới hạn 30 giây/câu</span><label class="switch"><input id="timeToggle" type="checkbox" checked aria-label="Bật giới hạn thời gian"><span class="switch-track"></span></label></div>
+              <div class="setting"><span>🔀 Xáo trộn câu hỏi</span><label class="switch"><input id="shuffleToggle" type="checkbox" checked aria-label="Xáo trộn thứ tự câu hỏi"><span class="switch-track"></span></label></div>
+              <div class="setting"><span>🔀 Xáo trộn A–D riêng từng câu</span><label class="switch"><input id="shuffleAnswersToggle" type="checkbox" checked aria-label="Xáo trộn độc lập bốn phương án A, B, C, D ở mỗi câu hỏi"><span class="switch-track"></span></label></div>
+              <div class="setting"><span>🔊 Âm thanh</span><label class="switch"><input id="soundToggle" type="checkbox" checked aria-label="Bật âm thanh"><span class="switch-track"></span></label></div>
+            </div>
+            <div class="button-row">
+              <button id="startButton" class="btn btn-primary" type="button">🚀 BẮT ĐẦU CHƠI</button>
+              <button id="startOriginalButton" class="btn btn-secondary" type="button">📖 CHƠI THEO THỨ TỰ ĐỀ</button>
+            </div>
+          </div>
+          <details class="teacher-note">
+            <summary>📝 Ghi chú dành cho giáo viên</summary>
+            <ul>
+              <li><strong>Câu 1b:</strong> Đề gốc có các phương án chưa chứa kết quả đúng. Trò chơi đã tạo lại phương án, đáp án chính xác là <strong>1 662 989</strong>.</li>
+              <li><strong>Câu 6b:</strong> Hướng dẫn chấm của file Word ghi phương án C, nhưng phép đổi đơn vị đúng là <strong>34 km² = 3 400 ha</strong>, chọn phương án B.</li>
+              <li><strong>Câu 3 và câu 7:</strong> Phân số lần lượt là <strong>3/5</strong> và <strong>2/5</strong>, theo dữ kiện của nội dung đề được cung cấp.</li>
+              <li><strong>Câu 5:</strong> Hai phép tính được trình bày là <strong>1/7 + 1/9</strong> và <strong>3/4 − 2/9</strong>.</li>
+              <li><strong>Xáo trộn đáp án:</strong> Bật công tắc “Xáo trộn A–D riêng từng câu” để hệ thống tự đổi vị trí bốn phương án một cách độc lập ở mỗi câu. Có thể tắt công tắc để giữ nguyên thứ tự A, B, C, D như đề. Mỗi câu lưu mã đáp án gốc, vì vậy việc đổi vị trí không làm sai kết quả chấm điểm; khi chơi lại, thứ tự phương án được tạo mới.</li>
+              <li><strong>Cách sử dụng trên lớp:</strong> Chọn “BẮT ĐẦU CHƠI” để áp dụng cài đặt xáo trộn câu hỏi; chọn “CHƠI THEO THỨ TỰ ĐỀ” để giữ trình tự 1a đến 10. Cài đặt xáo trộn đáp án vẫn được áp dụng độc lập với hai chế độ này.</li>
+              <li><strong>Lưu ý kiểm tra:</strong> Trò chơi gồm 16 lượt hỏi đáp, mỗi câu tối đa 1 điểm. Câu bỏ trống khi hết giờ được tính là sai; bấm “CÂU TIẾP THEO” chỉ chuyển câu sau khi đã trả lời hoặc hết giờ.</li>
+            </ul>
+          </details>
+        </div>
+      </div>
+      <p class="footer-note">Trường Tiểu học Sông Đà • Năm học 2026–2027</p>
+    </section>
+
+    <section id="gameScreen" class="screen" aria-label="Màn hình chơi">
+      <div class="game-head">
+        <div class="game-title">🌟 AI NHANH - AI ĐÚNG</div>
+        <div id="gameStudent" class="game-student">Chúc em chơi vui!</div>
+      </div>
+      <div class="panel stats-panel">
+        <div class="stats-top">
+          <div class="progress-label">TIẾN TRÌNH: <strong id="progressText">0/16</strong></div>
+          <div class="progress-label">ĐIỂM: <strong id="scoreText">0</strong>/16</div>
+        </div>
+        <div class="progress-track" role="progressbar" aria-label="Tiến trình hoàn thành" aria-valuemin="0" aria-valuemax="16" aria-valuenow="0" id="progressBar"><div id="progressFill" class="progress-fill"></div></div>
+        <div class="stats-grid">
+          <div class="stat"><span class="stat-icon">✅</span><span><span class="stat-label">Trả lời đúng</span><strong class="stat-value" id="correctText">0</strong></span></div>
+          <div class="stat"><span class="stat-icon">❌</span><span><span class="stat-label">Trả lời sai</span><strong class="stat-value" id="wrongText">0</strong></span></div>
+          <div class="stat"><span class="stat-icon">⭐</span><span><span class="stat-label">Điểm hiện tại</span><strong class="stat-value" id="scoreSmallText">0/16</strong></span></div>
+          <div class="stat"><span class="stat-icon">⏰</span><span><span class="stat-label">Thời gian câu</span><strong class="stat-value" id="timerSmallText">30 giây</strong></span></div>
+        </div>
+      </div>
+      <div class="panel question-panel">
+        <div class="question-meta">
+          <div class="question-tags"><span class="tag" id="roundTag">CÂU 1/16</span><span class="tag source" id="sourceTag">Câu 1a</span></div>
+          <div class="timer" id="timerBadge"><span class="timer-icon">⏳</span><span id="timerText">00:30</span></div>
+        </div>
+        <p class="question-title" id="questionTitle">Phép nhân số tự nhiên</p>
+        <h2 class="question-prompt" id="questionPrompt"></h2>
+        <p id="answerShuffleHint" class="answer-shuffle-hint" aria-live="polite"></p>
+        <div id="answerGrid" class="answer-grid"></div>
+        <div id="feedback" class="feedback" aria-live="polite">
+          <h3 id="feedbackHeading" class="feedback-heading"></h3>
+          <p id="feedbackAnswer" class="feedback-answer"></p>
+          <p id="explanation" class="explanation"></p>
+        </div>
+        <div class="next-row"><button id="nextButton" class="btn btn-primary" type="button" disabled>CÂU TIẾP THEO ➜</button></div>
+      </div>
+      <p class="footer-note">Đọc kĩ đề bài, suy nghĩ thật bình tĩnh và chọn một đáp án nhé!</p>
+    </section>
+
+    <section id="resultScreen" class="screen" aria-label="Kết quả trò chơi">
+      <div class="panel result-hero">
+        <div class="trophy" id="resultTrophy" aria-hidden="true">🏆</div>
+        <h2>HOÀN THÀNH THỬ THÁCH!</h2>
+        <p id="resultSubtitle">Em đã hoàn thành 16 lượt câu hỏi.</p>
+        <p class="result-name" id="resultName"></p>
+        <div class="result-score"><span id="finalScore">0</span><small> / 16 điểm</small></div>
+        <div class="result-grid">
+          <div class="result-tile"><strong id="finalCorrect">0</strong><span>Câu đúng</span></div>
+          <div class="result-tile"><strong id="finalWrong">0</strong><span>Câu sai / hết giờ</span></div>
+          <div class="result-tile"><strong id="finalPercent">0%</strong><span>Tỉ lệ đúng</span></div>
+          <div class="result-tile"><strong id="finalTime">00:00</strong><span>Thời gian hoàn thành</span></div>
+        </div>
+        <div id="resultComment" class="comment-box"></div>
+        <div class="button-row result-actions">
+          <button id="reviewButton" class="btn btn-secondary" type="button">📋 XEM LẠI BÀI LÀM</button>
+          <button id="replayButton" class="btn btn-primary" type="button">🔄 CHƠI LẠI</button>
+          <button id="replayOriginalButton" class="btn btn-light" type="button">📖 CHƠI LẠI THEO THỨ TỰ ĐỀ</button>
+          <button id="printButton" class="btn btn-light" type="button">🖨️ IN KẾT QUẢ</button>
+          <button id="homeButton" class="btn btn-light" type="button">⌂ MÀN HÌNH ĐẦU</button>
+        </div>
+      </div>
+      <div id="reviewPanel" class="panel review-panel hidden">
+        <h3>📚 XEM LẠI TOÀN BỘ BÀI LÀM</h3>
+        <div id="reviewList"></div>
+      </div>
+      <p class="footer-note">Mỗi lần luyện tập là một cơ hội để tiến bộ. Cố lên nhé!</p>
+    </section>
+  </main>
+</div>
+<div id="confettiLayer" class="confetti-layer" aria-hidden="true"></div>
+
+<script>
+'use strict';
+
+// Mỗi đáp án có mã riêng; việc chấm điểm dựa trên mã đáp án, không dựa vào chữ A/B/C/D.
+function frac(n, d) {
+  return `<span class="fraction" aria-label="${n} phần ${d}"><span class="num">${n}</span><span class="den">${d}</span></span>`;
+}
+
+const QUESTIONS = [
+  {
+    id: '1a', source: 'Câu 1a', title: 'Phép nhân số tự nhiên',
+    prompt: 'Kết quả của phép tính <span class="math-line">123 × 27</span> là:',
+    options: [
+      { id: 'a', html: '3321' }, { id: 'b', html: '3312' },
+      { id: 'c', html: '3221' }, { id: 'd', html: '3212' }
+    ], correct: 'a',
+    explanation: '123 × 27 = 123 × (20 + 7) = 2 460 + 861 = <strong>3 321</strong>.'
+  },
+  {
+    id: '1b', source: 'Câu 1b', title: 'Tìm số chưa biết',
+    prompt: 'Số thích hợp điền vào chỗ trống là:<br><span class="math-line">………. − 30 262 = 1 632 727</span>',
+    options: [
+      { id: 'a', html: '1 662 989' }, { id: 'b', html: '1 602 989' },
+      { id: 'c', html: '1 663 989' }, { id: 'd', html: '1 632 989' }
+    ], correct: 'a',
+    explanation: 'Muốn tìm số bị trừ, ta lấy hiệu cộng với số trừ:<br>1 632 727 + 30 262 = <strong>1 662 989</strong>.'
+  },
+  {
+    id: '2a', source: 'Câu 2a', title: 'Cấu tạo số thập phân',
+    prompt: 'Số thập phân gồm 7 chục, 3 đơn vị, 9 phần nghìn viết là:',
+    options: [
+      { id: 'a', html: '73,9000' }, { id: 'b', html: '73,009' },
+      { id: 'c', html: '73,09' }, { id: 'd', html: '73,0009' }
+    ], correct: 'b',
+    explanation: '7 chục = 70; 3 đơn vị = 3; 9 phần nghìn = 0,009.<br>70 + 3 + 0,009 = <strong>73,009</strong>.'
+  },
+  {
+    id: '2b', source: 'Câu 2b', title: 'So sánh số thập phân',
+    prompt: 'Số thập phân nhỏ nhất trong các số 4,15; 4,860; 4,91; 4,84 là:',
+    options: [
+      { id: 'a', html: '4,91' }, { id: 'b', html: '4,860' },
+      { id: 'c', html: '4,15' }, { id: 'd', html: '4,84' }
+    ], correct: 'c',
+    explanation: 'Viết các số có cùng số chữ số ở phần thập phân: 4,150; 4,860; 4,910; 4,840. Số nhỏ nhất là <strong>4,150 = 4,15</strong>.'
+  },
+  {
+    id: '3', source: 'Câu 3', title: 'Bài toán về phân số',
+    prompt: 'Khối lớp 5 có tất cả 210 học sinh, trong đó có ' + frac(3, 5) + ' số học sinh là nữ. Vậy khối lớp 5 có số học sinh nữ là bao nhiêu?',
+    options: [
+      { id: 'a', html: '126 học sinh' }, { id: 'b', html: '84 học sinh' },
+      { id: 'c', html: '135 học sinh' }, { id: 'd', html: '105 học sinh' }
+    ], correct: 'a',
+    explanation: 'Số học sinh nữ là: 210 × ' + frac(3, 5) + ' = 210 : 5 × 3 = <strong>126 (học sinh)</strong>.'
+  },
+  {
+    id: '4a', source: 'Câu 4a', title: 'Làm tròn số thập phân',
+    prompt: 'Làm tròn số 0,158 đến hàng phần mười ta được:',
+    options: [
+      { id: 'a', html: '0,17' }, { id: 'b', html: '0,159' },
+      { id: 'c', html: '0,16' }, { id: 'd', html: '0,2' }
+    ], correct: 'd',
+    explanation: 'Chữ số hàng phần trăm là 5 nên tăng chữ số hàng phần mười từ 1 lên 2. Vì vậy, 0,158 làm tròn đến hàng phần mười được <strong>0,2</strong>.'
+  },
+  {
+    id: '4b', source: 'Câu 4b', title: 'Làm tròn đến số tự nhiên gần nhất',
+    prompt: 'Điểm số môn Toán của Mai là 9,75. Làm tròn số này đến số tự nhiên gần nhất thì điểm số môn Toán của Mai là:',
+    options: [
+      { id: 'a', html: '10 điểm' }, { id: 'b', html: '9,8 điểm' },
+      { id: 'c', html: '9 điểm' }, { id: 'd', html: '9,75 điểm' }
+    ], correct: 'a',
+    explanation: 'Phần thập phân của 9,75 lớn hơn 0,5 nên làm tròn lên. Số 9,75 làm tròn đến số tự nhiên gần nhất là <strong>10</strong>.'
+  },
+  {
+    id: '5a', source: 'Câu 5a', title: 'Cộng hai phân số khác mẫu số',
+    prompt: 'Tính: ' + frac(1, 7) + ' + ' + frac(1, 9),
+    options: [
+      { id: 'a', html: frac(2, 16) }, { id: 'b', html: frac(16, 63) },
+      { id: 'c', html: frac(2, 63) }, { id: 'd', html: frac(15, 63) }
+    ], correct: 'b',
+    explanation: 'Quy đồng mẫu số: ' + frac(1, 7) + ' = ' + frac(9, 63) + ' và ' + frac(1, 9) + ' = ' + frac(7, 63) + '.<br>' + frac(9, 63) + ' + ' + frac(7, 63) + ' = <strong>' + frac(16, 63) + '</strong>.'
+  },
+  {
+    id: '5b', source: 'Câu 5b', title: 'Trừ hai phân số khác mẫu số',
+    prompt: 'Tính: ' + frac(3, 4) + ' − ' + frac(2, 9),
+    options: [
+      { id: 'a', html: frac(19, 36) }, { id: 'b', html: frac(5, 36) },
+      { id: 'c', html: frac(11, 36) }, { id: 'd', html: frac(1, 36) }
+    ], correct: 'a',
+    explanation: 'Quy đồng mẫu số: ' + frac(3, 4) + ' = ' + frac(27, 36) + ' và ' + frac(2, 9) + ' = ' + frac(8, 36) + '.<br>' + frac(27, 36) + ' − ' + frac(8, 36) + ' = <strong>' + frac(19, 36) + '</strong>.'
+  },
+  {
+    id: '6a', source: 'Câu 6a', title: 'Đơn vị đo diện tích',
+    prompt: 'Đơn vị đo diện tích nào thích hợp nhất để đo diện tích của một tỉnh hoặc một thành phố lớn?',
+    options: [
+      { id: 'a', html: 'm<sup>2</sup>' }, { id: 'b', html: 'dm<sup>2</sup>' },
+      { id: 'c', html: 'ha' }, { id: 'd', html: 'km<sup>2</sup>' }
+    ], correct: 'd',
+    explanation: 'Diện tích của một tỉnh hoặc thành phố lớn thường rất rộng, vì vậy đơn vị thích hợp nhất là <strong>kilômét vuông (km²)</strong>.'
+  },
+  {
+    id: '6b', source: 'Câu 6b', title: 'Đổi đơn vị đo diện tích',
+    prompt: 'Số thích hợp để điền vào chỗ chấm <span class="math-line">34 km<sup>2</sup> = …… ha</span> là:',
+    options: [
+      { id: 'a', html: '340' }, { id: 'b', html: '3 400' },
+      { id: 'c', html: '34 000' }, { id: 'd', html: '340 000' }
+    ], correct: 'b',
+    explanation: 'Ta có 1 km² = 100 ha.<br>34 km² = 34 × 100 = <strong>3 400 ha</strong>. (Chọn B; đáp án C trong hướng dẫn chấm gốc chưa chính xác.)'
+  },
+  {
+    id: '7', source: 'Câu 7', title: 'Bài toán về phân số và khối lượng',
+    prompt: 'Bác An thu hoạch được 2 tấn 35 kg hạt điều và hạnh nhân. Biết rằng số lượng hạnh nhân chiếm ' + frac(2, 5) + ' tổng số hạt điều và hạnh nhân thu hoạch được. Vậy, bác An thu hoạch được số ki-lô-gam hạnh nhân là bao nhiêu?',
+    options: [
+      { id: 'a', html: '804 kg' }, { id: 'b', html: '812 kg' },
+      { id: 'c', html: '814 kg' }, { id: 'd', html: '824 kg' }
+    ], correct: 'c',
+    explanation: 'Đổi: 2 tấn 35 kg = 2 035 kg.<br>Số ki-lô-gam hạnh nhân là: 2 035 × ' + frac(2, 5) + ' = 2 035 : 5 × 2 = <strong>814 kg</strong>.'
+  },
+  {
+    id: '8a', source: 'Câu 8a', title: 'So sánh thời gian – Bạn chạy nhanh nhất',
+    prompt: 'Trong một cuộc thi chạy 100 m, thời gian chạy của ba bạn An, Bình và Chi lần lượt là 14,2 giây; 13,85 giây; 14,05 giây. Bạn chạy nhanh nhất là ai?',
+    options: [
+      { id: 'a', html: 'Bạn An' }, { id: 'b', html: 'Bạn Bình' },
+      { id: 'c', html: 'Bạn Chi' }, { id: 'd', html: 'Cả ba bạn chạy nhanh như nhau' }
+    ], correct: 'b',
+    explanation: 'Cùng chạy quãng đường 100 m, bạn có thời gian ít nhất là bạn chạy nhanh nhất. Vì 13,85 giây là thời gian nhỏ nhất nên <strong>bạn Bình chạy nhanh nhất</strong>.'
+  },
+  {
+    id: '8b', source: 'Câu 8b', title: 'So sánh thời gian – Bạn chạy chậm nhất',
+    prompt: 'Vẫn với dữ kiện cuộc thi chạy 100 m: An chạy hết 14,2 giây; Bình chạy hết 13,85 giây; Chi chạy hết 14,05 giây. Bạn chạy chậm nhất là ai?',
+    options: [
+      { id: 'a', html: 'Bạn An' }, { id: 'b', html: 'Bạn Bình' },
+      { id: 'c', html: 'Bạn Chi' }, { id: 'd', html: 'Cả ba bạn chạy chậm như nhau' }
+    ], correct: 'a',
+    explanation: 'Cùng chạy quãng đường 100 m, bạn có thời gian nhiều nhất là bạn chạy chậm nhất. Vì 14,2 giây là thời gian lớn nhất nên <strong>bạn An chạy chậm nhất</strong>.'
+  },
+  {
+    id: '9', source: 'Câu 9', title: 'Tính nhanh',
+    prompt: 'Tính nhanh biểu thức:<br><span class="math-line">(512 × 48 − 47 × 512) × (25 × 8 − 200)</span>',
+    options: [
+      { id: 'a', html: '0' }, { id: 'b', html: '512' },
+      { id: 'c', html: '5 120' }, { id: 'd', html: '10 000' }
+    ], correct: 'a',
+    explanation: '(512 × 48 − 47 × 512) × (25 × 8 − 200)<br>= 512 × (48 − 47) × 0<br>= 512 × 1 × 0 = <strong>0</strong>.'
+  },
+  {
+    id: '10', source: 'Câu 10', title: 'Bài toán diện tích và tiền mua gạch',
+    prompt: 'Một nền nhà hình chữ nhật có chiều dài 8 m, chiều rộng 6 m. Người ta dùng các viên gạch hình vuông cạnh 4 dm để lát nền nhà đó. Biết giá tiền mỗi viên gạch là 20 000 đồng. Hỏi lát cả nền nhà thì hết bao nhiêu tiền mua gạch?',
+    options: [
+      { id: 'a', html: '3 000 000 đồng' }, { id: 'b', html: '4 800 000 đồng' },
+      { id: 'c', html: '6 000 000 đồng' }, { id: 'd', html: '12 000 000 đồng' }
+    ], correct: 'c',
+    explanation: 'Diện tích nền nhà: 8 × 6 = 48 m² = 4 800 dm².<br>Diện tích một viên gạch: 4 × 4 = 16 dm².<br>Số viên gạch: 4 800 : 16 = 300 viên.<br>Số tiền mua gạch: 20 000 × 300 = <strong>6 000 000 đồng</strong>.'
+  }
+];
+
+const $ = (id) => document.getElementById(id);
+const state = {
+  student: 'Bạn nhỏ', timeLimit: true, sound: true, shuffle: true, shuffleAnswers: true,
+  order: [], index: 0, answers: {}, optionOrders: {}, correct: 0, wrong: 0,
+  startedAt: 0, finishedAt: 0, remaining: 30, timerId: null,
+  answered: false, lastModeShuffle: true
+};
+
+function showScreen(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(screenId).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function shuffleArray(items) {
+  const arr = items.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+function stopTimer() {
+  if (state.timerId !== null) {
+    clearInterval(state.timerId);
+    state.timerId = null;
+  }
+}
+function playTone(correct) {
+  if (!state.sound) return;
+  try {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    const ctx = new AudioContextClass();
+    const notes = correct ? [660, 880] : [260, 190];
+    notes.forEach((frequency, index) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = correct ? 'sine' : 'triangle';
+      osc.frequency.value = frequency;
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime + index * .13);
+      gain.gain.exponentialRampToValueAtTime(.12, ctx.currentTime + index * .13 + .025);
+      gain.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + index * .13 + .18);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + index * .13);
+      osc.stop(ctx.currentTime + index * .13 + .2);
+    });
+    window.setTimeout(() => ctx.close().catch(() => {}), 650);
+  } catch (_) { /* Âm thanh không khả dụng thì trò chơi vẫn hoạt động bình thường. */ }
+}
+function celebrate() {
+  const layer = $('confettiLayer');
+  layer.innerHTML = '';
+  const colors = ['#ffcf38', '#ff8a36', '#2b88df', '#22b879', '#ed6a91', '#8e73d8'];
+  for (let i = 0; i < 34; i++) {
+    const piece = document.createElement('span');
+    piece.className = 'confetti-piece';
+    piece.style.left = (Math.random() * 100) + '%';
+    piece.style.background = colors[i % colors.length];
+    piece.style.animationDelay = (Math.random() * .35) + 's';
+    piece.style.setProperty('--drift', ((Math.random() - .5) * 190) + 'px');
+    piece.style.transform = `rotate(${Math.random() * 180}deg)`;
+    layer.appendChild(piece);
+  }
+  window.setTimeout(() => { layer.innerHTML = ''; }, 2400);
+}
+function startGame(forceOriginal) {
+  stopTimer();
+  state.student = $('studentName').value.trim() || 'Bạn nhỏ';
+  state.timeLimit = $('timeToggle').checked;
+  state.sound = $('soundToggle').checked;
+  state.shuffle = forceOriginal ? false : $('shuffleToggle').checked;
+  state.shuffleAnswers = $('shuffleAnswersToggle').checked;
+  state.lastModeShuffle = state.shuffle;
+  state.order = state.shuffle ? shuffleArray(QUESTIONS) : QUESTIONS.slice();
+  state.index = 0;
+  state.answers = {};
+  state.optionOrders = {};
+  state.correct = 0;
+  state.wrong = 0;
+  state.startedAt = Date.now();
+  state.finishedAt = 0;
+  state.answered = false;
+  $('gameStudent').textContent = '👋 Chúc ' + state.student + ' chơi thật tốt!';
+  $('reviewPanel').classList.add('hidden');
+  $('reviewButton').textContent = '📋 XEM LẠI BÀI LÀM';
+  showScreen('gameScreen');
+  renderQuestion();
+}
+function updateStats() {
+  const completed = Object.keys(state.answers).length;
+  $('progressText').textContent = completed + '/16';
+  $('scoreText').textContent = state.correct;
+  $('correctText').textContent = state.correct;
+  $('wrongText').textContent = state.wrong;
+  $('scoreSmallText').textContent = state.correct + '/16';
+  const percent = completed / QUESTIONS.length * 100;
+  $('progressFill').style.width = percent + '%';
+  $('progressBar').setAttribute('aria-valuenow', String(completed));
+}
+function formatClock(seconds) {
+  const safe = Math.max(0, Math.floor(seconds));
+  return String(Math.floor(safe / 60)).padStart(2, '0') + ':' + String(safe % 60).padStart(2, '0');
+}
+function renderTimer() {
+  if (!state.timeLimit) {
+    $('timerText').textContent = 'Không giới hạn';
+    $('timerSmallText').textContent = 'Không giới hạn';
+    $('timerBadge').classList.remove('urgent');
+    return;
+  }
+  $('timerText').textContent = formatClock(state.remaining);
+  $('timerSmallText').textContent = state.remaining + ' giây';
+  $('timerBadge').classList.toggle('urgent', state.remaining <= 10);
+}
+function startTimer() {
+  stopTimer();
+  state.remaining = 30;
+  renderTimer();
+  if (!state.timeLimit) return;
+  state.timerId = window.setInterval(() => {
+    if (state.answered) { stopTimer(); return; }
+    state.remaining -= 1;
+    renderTimer();
+    if (state.remaining <= 0) {
+      stopTimer();
+      submitAnswer(null, true);
+    }
+  }, 1000);
+}
+function renderQuestion() {
+  stopTimer();
+  state.answered = false;
+  const question = state.order[state.index];
+  $('roundTag').textContent = 'CÂU ' + (state.index + 1) + '/16';
+  $('sourceTag').textContent = question.source;
+  $('questionTitle').textContent = question.title;
+  $('questionPrompt').innerHTML = question.prompt;
+  $('answerShuffleHint').textContent = state.shuffleAnswers
+    ? '🔀 Bốn phương án A, B, C, D của câu này được xáo trộn độc lập.'
+    : '📖 Thứ tự đáp án đang giữ nguyên như đề gốc.';
+  $('feedback').className = 'feedback';
+  $('feedbackHeading').textContent = '';
+  $('feedbackAnswer').textContent = '';
+  $('explanation').innerHTML = '';
+  $('nextButton').disabled = true;
+  $('nextButton').textContent = state.index === 15 ? 'XEM KẾT QUẢ 🏆' : 'CÂU TIẾP THEO ➜';
+  const grid = $('answerGrid');
+  grid.innerHTML = '';
+  // Xáo trộn độc lập bốn phương án của từng câu; lưu mã đáp án để chấm đúng.
+  const displayedOptions = state.shuffleAnswers ? shuffleArray(question.options) : question.options.slice();
+  state.optionOrders[question.id] = displayedOptions.map(option => option.id);
+  displayedOptions.forEach((option, index) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'answer-btn';
+    button.dataset.optionId = option.id;
+    button.innerHTML = `<span class="answer-letter">${String.fromCharCode(65 + index)}</span><span>${option.html}</span>`;
+    button.addEventListener('click', () => submitAnswer(option.id, false));
+    grid.appendChild(button);
+  });
+  updateStats();
+  startTimer();
+}
+function submitAnswer(optionId, timedOut) {
+  if (state.answered) return;
+  state.answered = true;
+  stopTimer();
+  const question = state.order[state.index];
+  const isCorrect = !timedOut && optionId === question.correct;
+  const chosen = question.options.find(option => option.id === optionId) || null;
+  const right = question.options.find(option => option.id === question.correct);
+  state.answers[question.id] = {
+    selectedId: chosen ? chosen.id : null,
+    selectedHtml: chosen ? chosen.html : null,
+    optionOrder: state.optionOrders[question.id].slice(),
+    correctId: question.correct,
+    correctHtml: right.html,
+    isCorrect,
+    timedOut: !!timedOut,
+    explanation: question.explanation,
+    source: question.source,
+    title: question.title,
+    prompt: question.prompt
+  };
+  if (isCorrect) state.correct += 1; else state.wrong += 1;
+  updateStats();
+  document.querySelectorAll('.answer-btn').forEach(button => {
+    button.disabled = true;
+    const id = button.dataset.optionId;
+    if (id === question.correct) button.classList.add('correct');
+    else if (id === optionId && !isCorrect) button.classList.add('wrong');
+  });
+  const feedback = $('feedback');
+  feedback.className = 'feedback show ' + (isCorrect ? 'success' : 'error');
+  if (isCorrect) {
+    $('feedbackHeading').innerHTML = '🎉 CHÍNH XÁC! BẠN GIỎI LẮM!';
+    $('feedbackAnswer').innerHTML = 'Em đã chọn đúng đáp án <strong>' + String.fromCharCode(65 + state.optionOrders[question.id].indexOf(question.correct)) + '</strong>. Em được cộng 1 điểm.';
+    celebrate();
+  } else {
+    $('feedbackHeading').innerHTML = timedOut ? '⏰ HẾT GIỜ! CÙNG HỌC LẠI NHÉ!' : '💪 CHƯA CHÍNH XÁC! CÙNG HỌC LẠI NHÉ!';
+    const rightLetter = String.fromCharCode(65 + state.optionOrders[question.id].indexOf(question.correct));
+    $('feedbackAnswer').innerHTML = (timedOut ? 'Em chưa chọn đáp án trong thời gian quy định. ' : 'Đáp án đúng là ') + '<strong>' + rightLetter + '. ' + right.html + '</strong>.';
+  }
+  $('explanation').innerHTML = '<strong>💡 Lời giải:</strong> ' + question.explanation;
+  $('nextButton').disabled = false;
+  playTone(isCorrect);
+}
+function nextQuestion() {
+  if (!state.answered) return;
+  if (state.index >= state.order.length - 1) {
+    finishGame();
+    return;
+  }
+  state.index += 1;
+  renderQuestion();
+}
+function finishGame() {
+  stopTimer();
+  state.finishedAt = Date.now();
+  const totalTime = Math.max(0, Math.round((state.finishedAt - state.startedAt) / 1000));
+  const percent = Math.round(state.correct / QUESTIONS.length * 100);
+  $('resultName').textContent = 'Học sinh: ' + state.student;
+  $('finalScore').textContent = state.correct;
+  $('finalCorrect').textContent = state.correct;
+  $('finalWrong').textContent = state.wrong;
+  $('finalPercent').textContent = percent + '%';
+  $('finalTime').textContent = formatClock(totalTime);
+  $('resultSubtitle').textContent = 'Em đã hoàn thành đủ 16 lượt câu hỏi' + (state.lastModeShuffle ? ' (thứ tự câu hỏi đã xáo trộn).' : ' theo thứ tự đề gốc.') + (state.shuffleAnswers ? ' Vị trí đáp án trong từng câu đã được xáo trộn.' : ' Vị trí đáp án giữ nguyên như đề.');
+  let comment = '';
+  if (state.correct >= 15) { comment = '🏆 XUẤT SẮC! Em nắm vững kiến thức Toán 5. Hãy tiếp tục phát huy nhé!'; $('resultTrophy').textContent = '🏆'; }
+  else if (state.correct >= 12) { comment = '🌟 RẤT TỐT! Em hãy tiếp tục phát huy và chinh phục những thử thách tiếp theo.'; $('resultTrophy').textContent = '🥇'; }
+  else if (state.correct >= 8) { comment = '💪 CỐ GẮNG THÊM! Em hãy ôn lại những câu đã sai để tiến bộ hơn nhé.'; $('resultTrophy').textContent = '🥈'; }
+  else { comment = '🌱 HÃY LUYỆN TẬP TIẾP! Mỗi lần thử là một lần tiến bộ. Em đừng bỏ cuộc nhé!'; $('resultTrophy').textContent = '🌈'; }
+  $('resultComment').textContent = comment;
+  buildReview();
+  showScreen('resultScreen');
+  if (state.correct >= 12) celebrate();
+}
+function buildReview() {
+  const list = $('reviewList');
+  list.innerHTML = '';
+  state.order.forEach((question, index) => {
+    const answer = state.answers[question.id];
+    const item = document.createElement('article');
+    item.className = 'review-item';
+    const statusClass = answer.isCorrect ? 'good' : 'bad';
+    const statusText = answer.isCorrect ? '✓ ĐÚNG' : (answer.timedOut ? '⌛ HẾT GIỜ' : '✗ SAI');
+    const rightLetter = String.fromCharCode(65 + state.optionOrders[question.id].indexOf(question.correct));
+    const chosenLetter = answer.selectedId ? String.fromCharCode(65 + state.optionOrders[question.id].indexOf(answer.selectedId)) : 'Chưa chọn';
+    item.innerHTML = `
+      <div class="review-top"><span class="review-id">${index + 1}/16 • ${question.source}</span><span class="review-status ${statusClass}">${statusText}</span></div>
+      <p class="review-prompt">${question.prompt}</p>
+      <p class="review-details">Em chọn: <strong>${chosenLetter}${answer.selectedHtml ? '. ' + answer.selectedHtml : ''}</strong><br>Đáp án đúng: <strong>${rightLetter}. ${answer.correctHtml}</strong></p>
+      <p class="review-explain"><strong>Lời giải:</strong> ${question.explanation}</p>`;
+    list.appendChild(item);
+  });
+}
+
+$('startButton').addEventListener('click', () => startGame(false));
+$('startOriginalButton').addEventListener('click', () => startGame(true));
+$('nextButton').addEventListener('click', nextQuestion);
+$('reviewButton').addEventListener('click', () => {
+  const panel = $('reviewPanel');
+  const willShow = panel.classList.contains('hidden');
+  panel.classList.toggle('hidden', !willShow);
+  $('reviewButton').textContent = willShow ? '🙈 ẨN BÀI LÀM' : '📋 XEM LẠI BÀI LÀM';
+  if (willShow) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+$('replayButton').addEventListener('click', () => startGame(false));
+$('replayOriginalButton').addEventListener('click', () => startGame(true));
+$('printButton').addEventListener('click', () => window.print());
+$('homeButton').addEventListener('click', () => { stopTimer(); showScreen('startScreen'); });
+
+// Kiểm tra cấu trúc dữ liệu ngay khi tải trang để tránh trò chơi chạy với bộ câu hỏi thiếu hoặc sai định dạng.
+(function validateQuestionBank() {
+  if (QUESTIONS.length !== 16) throw new Error('Bộ câu hỏi phải có đúng 16 lượt.');
+  const ids = new Set();
+  QUESTIONS.forEach(question => {
+    if (!question.id || ids.has(question.id)) throw new Error('Mã câu hỏi bị thiếu hoặc trùng.');
+    ids.add(question.id);
+    if (!Array.isArray(question.options) || question.options.length !== 4) throw new Error('Mỗi câu hỏi phải có đúng 4 phương án: ' + question.id);
+    if (!question.options.some(option => option.id === question.correct)) throw new Error('Đáp án đúng không hợp lệ: ' + question.id);
+  });
+})();
+</script>
+</body>
+</html>
